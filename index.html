@@ -1,215 +1,185 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>正多角形ビューア</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hit & Blow</title>
   <style>
-    * {
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 16px;
+      color: #222;
+      background-color: #fafafa;
+    }
+    .debug {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .game-layout {
+      display: flex;
+      gap: 50px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .left-column {
+      flex: 0 0 auto;
+    }
+    h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+    .input-panel {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    input[type="text"] {
+      width: 150px;
+      padding: 8px 10px;
+      font-size: 1rem;
+      border: 1px solid #bbb;
+      border-radius: 4px;
       box-sizing: border-box;
     }
-
-    body {
-      font-family: sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 24px 16px;
-      background-color: #f1f5f9;
-      color: #1e293b;
-    }
-
-    .container {
-      max-width: 640px;
-      margin: 0 auto;
-      background-color: #ffffff;
-      padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 1.4rem;
-      color: #0f172a;
-    }
-
-    .subtitle {
-      margin: 0 0 20px;
-      font-size: 0.92rem;
-      color: #475569;
-    }
-
-    .canvas-wrapper {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    canvas {
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      background-color: #f8fafc;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      gap: 14px;
-      padding: 16px;
-      background-color: #f8fafc;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-    }
-
-    .control-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .checkbox-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    button {
+      padding: 8px 16px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #1976d2;
+      border: none;
+      border-radius: 4px;
       cursor: pointer;
-      user-select: none;
+    }
+    button:hover:not(:disabled) {
+      background-color: #1565c0;
+    }
+    button:disabled {
+      background-color: #90caf9;
+      cursor: not-allowed;
+    }
+    .output-message {
+      margin-top: 12px;
+      min-height: 24px;
+      font-weight: bold;
+    }
+    .history-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .history-group label {
+      font-size: 0.9rem;
+      color: #444;
+    }
+    textarea {
+      width: 300px;
+      height: 200px;
+      padding: 8px;
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f3f3f3;
+      color: #222;
+      resize: none;
+      box-sizing: border-box;
     }
   </style>
 </head>
 <body>
-  <main class="container">
-    <h1>正多角形ビューア</h1>
-    <p class="subtitle">スライダーで頂点数を変えて、正三角形から正十二角形まで描画します。</p>
+  <div id="debugAnswer" class="debug"></div>
 
-    <div class="canvas-wrapper">
-      <canvas id="polygonCanvas" width="480" height="360"></canvas>
+  <div class="game-layout">
+    <div class="left-column">
+      <h3>4桁の数を入力してね</h3>
+      <div class="input-panel">
+        <input
+          type="text"
+          id="inputBox"
+          placeholder="1234"
+          maxlength="4"
+          aria-label="入力"
+        />
+        <button type="button" id="checkButton">チェック</button>
+      </div>
+      <div id="outputMessage" class="output-message"></div>
     </div>
 
-    <section class="controls" aria-label="多角形の設定">
-      <div class="control-row">
-        <label for="sidesRange">頂点数（角の数）: <span id="sidesValue">5</span>角形</label>
-        <input type="range" id="sidesRange" min="3" max="12" value="5">
-      </div>
-
-      <div class="control-row">
-        <label class="checkbox-label">
-          <input type="checkbox" id="showGuideToggle" checked>
-          補助線を表示
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox" id="fillPolygonToggle" checked>
-          内側を塗りつぶす
-        </label>
-      </div>
-    </section>
-  </main>
+    <div class="history-group">
+      <label for="historyArea">履歴:</label>
+      <textarea id="historyArea" readonly></textarea>
+    </div>
+  </div>
 
   <script>
-    const canvas = document.getElementById("polygonCanvas");
-    const ctx = canvas.getContext("2d");
+    // 4桁のランダムな数字の配列を生成（0〜9、重複あり）
+    const answer = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10));
 
-    const sidesRange = document.getElementById("sidesRange");
-    const sidesValue = document.getElementById("sidesValue");
-    const showGuideToggle = document.getElementById("showGuideToggle");
-    const fillPolygonToggle = document.getElementById("fillPolygonToggle");
+    // デバッグ用に答えを表示（公開時に隠したい場合は下の2行をコメントアウトまたは削除してください）
+    const debugEl = document.getElementById("debugAnswer");
+    debugEl.textContent = `(デバッグ用答え: ${answer.join("")})`;
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-    const radius = 120;
+    const inputBox = document.getElementById("inputBox");
+    const checkButton = document.getElementById("checkButton");
+    const outputMessage = document.getElementById("outputMessage");
+    const historyArea = document.getElementById("historyArea");
 
-    function getPolygonVertices(sides, startAngle = -Math.PI / 2) {
-      const vertices = [];
-      const stepAngle = (Math.PI * 2) / sides;
+    function handleCheck() {
+      const userInput = inputBox.value.trim();
+      outputMessage.textContent = "";
 
-      for (let i = 0; i < sides; i++) {
-        const angle = startAngle + stepAngle * i;
-        const x = cx + radius * Math.cos(angle);
-        const y = cy + radius * Math.sin(angle);
-        vertices.push({ x, y });
+      // バリデーション（4桁の数字のみ）
+      if (!/^\d{4}$/.test(userInput)) {
+        outputMessage.textContent = "※4桁の数字を入力してください";
+        return;
       }
 
-      return vertices;
-    }
-
-    function drawGuides(vertices) {
-      ctx.save();
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.setLineDash([5, 5]);
-      ctx.strokeStyle = "#94a3b8";
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-
-      ctx.setLineDash([]);
-      ctx.strokeStyle = "#cbd5e1";
-      ctx.lineWidth = 1;
-      vertices.forEach((v) => {
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(v.x, v.y);
-        ctx.stroke();
-      });
-
-      ctx.beginPath();
-      ctx.arc(cx, cy, 3.5, 0, Math.PI * 2);
-      ctx.fillStyle = "#475569";
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    function drawPolygon() {
-      const sides = Number(sidesRange.value);
-      sidesValue.textContent = String(sides);
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const vertices = getPolygonVertices(sides);
-
-      if (showGuideToggle.checked) {
-        drawGuides(vertices);
-      }
-
-      ctx.beginPath();
-      vertices.forEach((v, index) => {
-        if (index === 0) {
-          ctx.moveTo(v.x, v.y);
-        } else {
-          ctx.lineTo(v.x, v.y);
+      // ヒットの判定
+      let hit = 0;
+      for (let i = 0; i < 4; i++) {
+        if (answer[i] === Number(userInput[i])) {
+          hit += 1;
         }
-      });
-      ctx.closePath();
-
-      if (fillPolygonToggle.checked) {
-        ctx.fillStyle = "rgba(59, 130, 246, 0.22)";
-        ctx.fill();
       }
 
-      ctx.strokeStyle = "#2563eb";
-      ctx.lineWidth = 3;
-      ctx.lineJoin = "round";
-      ctx.stroke();
+      // ブローの判定（元のPythonコードと同じ重複除外ロジック）
+      let blow = 0;
+      for (let j = 0; j < 4; j++) {
+        if (userInput.slice(0, j).includes(userInput[j])) {
+          continue;
+        }
+        for (let i = 0; i < 4; i++) {
+          if (Number(userInput[j]) === answer[i] && answer[i] !== Number(userInput[i])) {
+            blow += 1;
+            break;
+          }
+        }
+      }
 
-      vertices.forEach((v) => {
-        ctx.beginPath();
-        ctx.arc(v.x, v.y, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
-        ctx.strokeStyle = "#1d4ed8";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      });
+      // 結果表示と履歴への追加
+      if (hit === 4) {
+        outputMessage.textContent = "🎉 あたり！ Complete!";
+        inputBox.disabled = true;
+        checkButton.disabled = true;
+      } else {
+        historyArea.value += `${userInput} / hit: ${hit}, blow: ${blow}\n`;
+        inputBox.value = "";
+        inputBox.focus();
+      }
     }
 
-    sidesRange.addEventListener("input", drawPolygon);
-    showGuideToggle.addEventListener("change", drawPolygon);
-    fillPolygonToggle.addEventListener("change", drawPolygon);
+    checkButton.addEventListener("click", handleCheck);
 
-    drawPolygon();
+    // Enterキーでもチェックできるように補助
+    inputBox.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !checkButton.disabled) {
+        handleCheck();
+      }
+    });
   </script>
 </body>
 </html>
