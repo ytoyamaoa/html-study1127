@@ -3,38 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Canvas グラフ・図形ビューア</title>
+  <title>正多角形ビューア</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="container">
-    <h1>Canvas グラフ・図形ビューア</h1>
-    <p class="subtitle">操作パネルから線の太さや塗りつぶし、データを切り替えて描画を確認できます。</p>
+    <h1>正多角形ビューア</h1>
+    <p class="subtitle">スライダーで頂点数を変えて、正三角形から正十二角形まで描画します。</p>
 
     <div class="canvas-wrapper">
-      <canvas id="chartCanvas" width="600" height="320"></canvas>
+      <canvas id="polygonCanvas" width="480" height="360"></canvas>
     </div>
 
-    <section class="controls" aria-label="描画設定">
+    <section class="controls" aria-label="多角形の設定">
       <div class="control-row">
-        <label for="lineWidthRange">線の太さ: <span id="lineWidthValue">3</span>px</label>
-        <input type="range" id="lineWidthRange" min="1" max="10" value="3">
+        <label for="sidesRange">頂点数（角の数）: <span id="sidesValue">5</span>角形</label>
+        <input type="range" id="sidesRange" min="3" max="12" value="5">
       </div>
 
       <div class="control-row">
         <label class="checkbox-label">
-          <input type="checkbox" id="fillToggle" checked>
-          下側を塗りつぶす（エリア表示）
+          <input type="checkbox" id="showGuideToggle" checked>
+          外接円と中心からの補助線を表示
         </label>
         <label class="checkbox-label">
-          <input type="checkbox" id="pointToggle" checked>
-          頂点に丸印を表示する
+          <input type="checkbox" id="fillPolygonToggle" checked>
+          内側を塗りつぶす
         </label>
-      </div>
-
-      <div class="button-group">
-        <button type="button" id="presetBtn">サンプルデータ切替</button>
-        <button type="button" id="randomBtn" class="secondary">ランダム生成</button>
       </div>
     </section>
   </main>
