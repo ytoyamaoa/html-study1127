@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 16px;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+h1 {
+  color: #0f172a;
+  border-bottom: 2px solid #cbd5e1;
+  padding-bottom: 8px;
+}
+
+p {
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+}
