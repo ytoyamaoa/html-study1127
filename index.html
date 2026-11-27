@@ -3,50 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>index</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 32px;
-      background-color: #f8fafc;
-    }
-    canvas {
-      border: 1px solid #94a3b8;
-      background-color: #ffffff;
-    }
-  </style>
+  <title>Canvas グラフ・図形ビューア</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Canvas練習</h1>
-  <canvas id="myCanvas" width="480" height="300"></canvas>
+  <main class="container">
+    <h1>Canvas グラフ・図形ビューア</h1>
+    <p class="subtitle">操作パネルから線の太さや塗りつぶし、データを切り替えて描画を確認できます。</p>
 
-  <script>
-    const canvas = document.getElementById("myCanvas");
-    const ctx = canvas.getContext("2d");
+    <div class="canvas-wrapper">
+      <canvas id="chartCanvas" width="600" height="320"></canvas>
+    </div>
 
-    // 1. 塗りつぶしの長方形 (x, y, 幅, 高さ)
-    ctx.fillStyle = "#3b82f6";
-    ctx.fillRect(30, 30, 120, 80);
+    <section class="controls" aria-label="描画設定">
+      <div class="control-row">
+        <label for="lineWidthRange">線の太さ: <span id="lineWidthValue">3</span>px</label>
+        <input type="range" id="lineWidthRange" min="1" max="10" value="3">
+      </div>
 
-    // 2. 枠線だけの長方形
-    ctx.strokeStyle = "#ef4444";
-    ctx.lineWidth = 3;
-    ctx.strokeRect(180, 30, 120, 80);
+      <div class="control-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="fillToggle" checked>
+          下側を塗りつぶす（エリア表示）
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="pointToggle" checked>
+          頂点に丸印を表示する
+        </label>
+      </div>
 
-    // 3. 円 (中心x, 中心y, 半径, 開始角度, 終了角度)
-    ctx.beginPath();
-    ctx.arc(380, 70, 40, 0, Math.PI * 2);
-    ctx.fillStyle = "#10b981";
-    ctx.fill();
+      <div class="button-group">
+        <button type="button" id="presetBtn">サンプルデータ切替</button>
+        <button type="button" id="randomBtn" class="secondary">ランダム生成</button>
+      </div>
+    </section>
+  </main>
 
-    // 4. 直線・折れ線
-    ctx.beginPath();
-    ctx.moveTo(30, 170);
-    ctx.lineTo(150, 240);
-    ctx.lineTo(270, 170);
-    ctx.strokeStyle = "#1e293b";
-    ctx.lineWidth = 4;
-    ctx.stroke();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
