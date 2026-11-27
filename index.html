@@ -3,11 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML学習ページ</title>
-  <link rel="stylesheet" href="style.css">
+  <title>index</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 32px;
+      background-color: #f8fafc;
+    }
+    canvas {
+      border: 1px solid #94a3b8;
+      background-color: #ffffff;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello GitHub Pages</h1>
-  <p>学習用に作成した最初のHTMLページです。</p>
+  <h1>Canvasで図形</h1>
+  <canvas id="myCanvas" width="480" height="300"></canvas>
+
+  <script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // 1. 塗りつぶしの長方形 (x, y, 幅, 高さ)
+    ctx.fillStyle = "#3b82f6";
+    ctx.fillRect(30, 30, 120, 80);
+
+    // 2. 枠線だけの長方形
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(180, 30, 120, 80);
+
+    // 3. 円 (中心x, 中心y, 半径, 開始角度, 終了角度)
+    ctx.beginPath();
+    ctx.arc(380, 70, 40, 0, Math.PI * 2);
+    ctx.fillStyle = "#10b981";
+    ctx.fill();
+
+    // 4. 直線・折れ線
+    ctx.beginPath();
+    ctx.moveTo(30, 170);
+    ctx.lineTo(150, 240);
+    ctx.lineTo(270, 170);
+    ctx.strokeStyle = "#1e293b";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+  </script>
 </body>
 </html>
